@@ -1,19 +1,17 @@
 use methods::{RANGE_PROOF_ELF, RANGE_PROOF_ID};
+use common::{BASE, MODULUS, RANGE, EXPONENT};
 use num_bigint::BigUint;
 use risc0_zkvm::{default_prover, ExecutorEnv, Receipt, ProveInfo};
 use std::str::FromStr;
 use std::time::Instant;
 use risc0_zkvm::serde::to_vec;
 
-pub const MODULUS: &str = "8155133734070055735139271277173718200941522166153710213522626777763679009805792017274916613411023848268056376687809186180768200590914945958831360737612803";
-pub const BASE: &str = "4";
-pub const RANGE: &str = "4";
-pub const EXPONENT: &str = "4";
+
 
 fn main() {
-    let (base, modulus, range, exponent) = setup_inputs();
+    let (base, modulus, range, result) = setup_inputs();
     
-    let env = setup_env(&base, &modulus, &range, &exponent);
+    let env = setup_env(&base, &modulus, &range, &result);
 
     // Generate proof and get receipt
     let receipt = generate_proof(env).receipt;
@@ -26,15 +24,17 @@ fn setup_inputs() -> (BigUint, BigUint, BigUint, BigUint) {
     let base = BigUint::from_str(BASE).expect("Invalid number for Base");
     let modulus = BigUint::from_str(MODULUS).expect("Invalid number for Modulus");
     let range = BigUint::from_str(RANGE).expect("Invalid number for Range");
+    // exponent would not be provided
     let exponent = BigUint::from_str(EXPONENT).expect("Invalid number for Exponent");
-    (base, modulus,range, exponent)
+    let result = base.modpow(&exponent, &modulus);
+    (base, modulus, range, result)
 }
 
 fn setup_env<'a>(
     base: &'a BigUint, 
     modulus: &'a BigUint, 
     range: &'a BigUint, 
-    exponent: &'a BigUint
+    result: &'a BigUint, 
 ) -> ExecutorEnv<'a> {
     ExecutorEnv::builder()
         .write(&to_vec(base).unwrap())
@@ -43,7 +43,7 @@ fn setup_env<'a>(
         .unwrap()
         .write(&to_vec(range).unwrap())
         .unwrap()
-        .write(&to_vec(exponent).unwrap())
+        .write(&to_vec(result).unwrap())
         .unwrap()
         .build()
         .unwrap()

@@ -1,19 +1,27 @@
-extern crate num_bigint as bigint;
-
-use bigint::BigUint;
+use num_bigint::BigUint;
 use risc0_zkvm::guest::env;
+use std::str::FromStr;
+use common::EXPONENT;
 
+// pub const EXPONENT: &str = "8";
 pub fn main() {
     let base: BigUint = env::read();
     let modulus: BigUint = env::read();
     let range: BigUint = env::read();
-    let exp: BigUint = env::read();
+    let result: BigUint = env::read();
 
-    if exp > range {
-        panic!("Exp is not in range");
+    let exponent = BigUint::from_str(EXPONENT).expect("Invalid number for Exponent");
+    env::write(&exponent);
+
+    if exponent > range {
+        panic!("Range proof generation faild: Exponent is out of range");
     }
 
-    let result = base.modpow(&exp, &modulus);
+    let calaulation = base.modpow(&exponent, &modulus);
 
-    env::commit(&(base, modulus, range, result));
+    if exponent > range {
+        panic!("Range proof generation faild: Exponent is out of range");
+    }
+
+    env::commit(&(base, modulus, range, calaulation));
 }

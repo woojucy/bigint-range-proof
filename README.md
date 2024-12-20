@@ -24,16 +24,19 @@ To run this project, you will need Rust installed on your system. If Rust is not
 
 ## Structure
 ```plaintext
-BIGINTRANGEPROOF
+bigint-range-proof
 ├── host
 │   ├── src    
 │   │   └── main.rs           
 │   └── Cargo.toml            
 ├── methods
 │   ├── guest
-│   │   └── src
-│   │       ├── build.rs       
-│   │       └── Cargo.toml           
+│   │   ├── src
+│   │   │   └── main.rs  
+│   │   └── Cargo.toml  
+│   ├── src
+│   │   └── lib.rs  
+│   ├── build.rs           
 │   └── Cargo.toml             
 ├── README.md                 
 └── rust-toolchain.toml       
