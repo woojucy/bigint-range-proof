@@ -14,14 +14,14 @@ pub fn main() {
     env::write(&exponent);
 
     if exponent > range {
-        panic!("Range proof generation faild: Exponent is out of range");
+        panic!("Range proof generation failed: Exponent ({}) is out of range ({})", exponent, range);
     }
 
-    let calaulation = base.modpow(&exponent, &modulus);
+    let calculation = base.modpow(&exponent, &modulus);
 
-    if exponent > range {
-        panic!("Range proof generation faild: Exponent is out of range");
+    if result != calculation {
+        panic!("Range proof generation failed: Result ({}) does not match the calculation ({})", result, calculation);
     }
 
-    env::commit(&(base, modulus, range, calaulation));
+    env::commit(&(base, modulus, range, calculation));
 }

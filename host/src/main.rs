@@ -1,16 +1,14 @@
+use common::{BASE, EXPONENT, MODULUS, RANGE};
 use methods::{RANGE_PROOF_ELF, RANGE_PROOF_ID};
-use common::{BASE, MODULUS, RANGE, EXPONENT};
 use num_bigint::BigUint;
-use risc0_zkvm::{default_prover, ExecutorEnv, Receipt, ProveInfo};
+use risc0_zkvm::serde::to_vec;
+use risc0_zkvm::{default_prover, ExecutorEnv, ProveInfo, Receipt};
 use std::str::FromStr;
 use std::time::Instant;
-use risc0_zkvm::serde::to_vec;
-
-
 
 fn main() {
     let (base, modulus, range, result) = setup_inputs();
-    
+
     let env = setup_env(&base, &modulus, &range, &result);
 
     // Generate proof and get receipt
@@ -27,14 +25,21 @@ fn setup_inputs() -> (BigUint, BigUint, BigUint, BigUint) {
     // exponent would not be provided
     let exponent = BigUint::from_str(EXPONENT).expect("Invalid number for Exponent");
     let result = base.modpow(&exponent, &modulus);
+
+    println!("Base: {}", base);
+    println!("Modulus: {}", modulus);
+    println!("Range: {}", range);
+    println!("Exponent: {}", exponent);
+    println!("Result of base^exponent % modulus: {}", result);
+
     (base, modulus, range, result)
 }
 
 fn setup_env<'a>(
-    base: &'a BigUint, 
-    modulus: &'a BigUint, 
-    range: &'a BigUint, 
-    result: &'a BigUint, 
+    base: &'a BigUint,
+    modulus: &'a BigUint,
+    range: &'a BigUint,
+    result: &'a BigUint,
 ) -> ExecutorEnv<'a> {
     ExecutorEnv::builder()
         .write(&to_vec(base).unwrap())
