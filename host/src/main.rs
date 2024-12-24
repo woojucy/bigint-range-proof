@@ -1,9 +1,7 @@
-use common::{BASE, EXPONENT, MODULUS, RANGE};
+use common::{Input};
 use methods::{RANGE_PROOF_ELF, RANGE_PROOF_ID};
 use num_bigint::BigUint;
-use risc0_zkvm::serde::to_vec;
 use risc0_zkvm::{default_prover, ExecutorEnv, ProveInfo, Receipt};
-use std::str::FromStr;
 use std::time::Instant;
 
 fn main() {
@@ -14,25 +12,29 @@ fn main() {
     // Generate proof and get receipt
     let receipt = generate_proof(env).receipt;
 
+    let input: Input = receipt.journal.decode().unwrap();
+
+    println!("Host::Base: {}", input.base);
+    println!("Host::Modulus: {}", input.modulus);
+    println!("Host::Range: {}", input.range);
+    println!("Host::Result: {}", input.result);
+
     // Verify the proof
     verify_proof(&receipt);
 }
 
 fn setup_inputs() -> (BigUint, BigUint, BigUint, BigUint) {
-    let base = BigUint::from_str(BASE).expect("Invalid number for Base");
-    let modulus = BigUint::from_str(MODULUS).expect("Invalid number for Modulus");
-    let range = BigUint::from_str(RANGE).expect("Invalid number for Range");
-    // exponent would not be provided
-    let exponent = BigUint::from_str(EXPONENT).expect("Invalid number for Exponent");
-    let result = base.modpow(&exponent, &modulus);
+    let input = Input::default();
 
-    println!("Base: {}", base);
-    println!("Modulus: {}", modulus);
-    println!("Range: {}", range);
-    println!("Exponent: {}", exponent);
-    println!("Result of base^exponent % modulus: {}", result);
+    println!("Host::Initial Base: {}", input.base);
+    println!("Host::Initial Modulus: {}", input.modulus);
+    println!("Host::Initial Range: {}", input.range);
+    println!(
+        "Host::Initial Result of base^exponent % modulus: {}",
+        input.result
+    );
 
-    (base, modulus, range, result)
+    (input.base, input.modulus, input.range, input.result)
 }
 
 fn setup_env<'a>(
@@ -41,15 +43,15 @@ fn setup_env<'a>(
     range: &'a BigUint,
     result: &'a BigUint,
 ) -> ExecutorEnv<'a> {
+    let input = Input {
+        base: base.clone(),
+        modulus: modulus.clone(),
+        range: range.clone(),
+        result: result.clone(),
+    };
+
     ExecutorEnv::builder()
-        .write(&to_vec(base).unwrap())
-        .unwrap()
-        .write(&to_vec(modulus).unwrap())
-        .unwrap()
-        .write(&to_vec(range).unwrap())
-        .unwrap()
-        .write(&to_vec(result).unwrap())
-        .unwrap()
+        .write_slice(&bincode::serialize(&input).unwrap())
         .build()
         .unwrap()
 }

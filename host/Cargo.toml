@@ -9,5 +9,5 @@ common = { path = "../common" }
 num-bigint = { version = "0.4", features = ["rand", "serde"] }
 num-traits = "0.2"
 risc0-zkvm = { version = "1.0.5", features = ['std'] }
-serde = "1.0"
+serde = { version = "1", features = ["derive"] }
 bincode = "1.3"
