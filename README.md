@@ -30,16 +30,19 @@ Before building the project, you must install the 'risc0' toolchain. You can ins
 
 ## Structure
 ```plaintext
-BIGINTRANGEPROOF
+bigint-range-proof
 ├── host
 │   ├── src    
 │   │   └── main.rs           
 │   └── Cargo.toml            
 ├── methods
 │   ├── guest
-│   │   └── src
-│   │       ├── build.rs       
-│   │       └── Cargo.toml           
+│   │   ├── src
+│   │   │   └── main.rs  
+│   │   └── Cargo.toml  
+│   ├── src
+│   │   └── lib.rs  
+│   ├── build.rs           
 │   └── Cargo.toml             
 ├── README.md                 
 └── rust-toolchain.toml       

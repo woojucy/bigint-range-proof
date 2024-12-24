@@ -9,3 +9,6 @@ risc0-zkvm = "1.0.5"
 
 [package.metadata.risc0]
 methods = ["guest"]
+
+[lib]
+path = "src/lib.rs"
