@@ -5,7 +5,13 @@ This repository implements range proofs for big integers using the zkVM (zero-kn
 ## How to Run the Code
 To run this project, you will need Rust installed on your system. If Rust is not installed, you can install it from [the official Rust website](https://rust-lang.org).
 
-
+### Install the risc0 toolchain
+Before building the project, you must install the 'risc0' toolchain. You can install it using `rzup` as follows:
+   ```bash
+   curl -L https://risczero.com/install | bash
+   rzup install
+   ```
+   
 ### Build the project:
    ```bash
    cargo build --release

@@ -1,6 +1,4 @@
-extern crate num_bigint as bigint;
-
-use bigint::BigUint;
+use num_bigint::BigUint;
 use risc0_zkvm::guest::env;
 
 pub fn main() {
