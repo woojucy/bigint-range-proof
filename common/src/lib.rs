@@ -2,10 +2,10 @@ use num_bigint::BigUint;
 use num_traits::identities::Zero;
 use std::str::FromStr;
 
-pub const MODULUS: &str = "8155133734070055735139271277173718200941522166153710213522626777763679009805792017274916613411023848268056376687809186180768200590914945958831360737612803";
+pub const MODULUS: &str = "8019834928465827340298510934701928311";
 pub const BASE: &str = "4";
-pub const RANGE: &str = "8";
-pub const EXPONENT: &str = "2";
+pub const RANGE: &str = "801983492846582734029851093470192831";
+pub const EXPONENT: &str = "325926";
 
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct Input {
@@ -17,6 +17,7 @@ pub struct Input {
 
 impl Input {
     // Constructor using default constants
+    #[warn(clippy::should_implement_trait)]
     pub fn default() -> Self {
         Self::new(BASE, MODULUS, RANGE)
     }
@@ -32,12 +33,8 @@ impl Input {
         } else {
             Self::calculate_private_modular_exponentiation(&base, &modulus)
         };
-        
-        println!("Initial parameter settings");
-        println!("Base: {}", base);
-        println!("Modulus: {}", modulus);
-        println!("Range: {}", range);
-        println!("Result of base^exponent % modulus: {}", result);
+
+        println!("✅ Initial parameter setting finished");
 
         Input {
             base,
@@ -55,4 +52,15 @@ impl Input {
             base.modpow(&exponent, modulus)
         }
     }
+}
+
+pub fn print_input(label: &str, input: &Input) {
+    println!("\n----------------------------------------------------");
+    println!("🔎 {}::Show Parameters", label);
+    println!("====================================================");
+    println!("1️⃣ Base:     {}", input.base);
+    println!("2️⃣ Modulus:  {}", input.modulus);
+    println!("3️⃣ Range:    {}", input.range);
+    println!("4️⃣ Result:   {}", input.result);
+    println!("----------------------------------------------------\n");
 }
